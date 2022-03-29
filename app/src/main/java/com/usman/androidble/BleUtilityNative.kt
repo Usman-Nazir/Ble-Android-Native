@@ -19,15 +19,15 @@ import java.util.concurrent.atomic.AtomicReference
 
 
 class BleUtilityNative {
-    val allCharacteristics: MutableList<BluetoothGattCharacteristic> = arrayListOf()
-    var characteristicChanged: AtomicReference<MutableList<Pair<BluetoothGattCharacteristic, ((BluetoothGattCharacteristic?) -> Unit)>>> = AtomicReference(arrayListOf())
+    private val allCharacteristics: MutableList<BluetoothGattCharacteristic> = arrayListOf()
+    private var characteristicChanged: AtomicReference<MutableList<Pair<BluetoothGattCharacteristic, ((BluetoothGattCharacteristic?) -> Unit)>>> = AtomicReference(arrayListOf())
     var bleDevice: BluetoothDevice? = null
     private var characteristicUuid: UUID = UUID.fromString("10fc308a-f1f9-493c-9643-6a9f016f5ecd")
 
 
-    var connectionErrorR: ((Throwable) -> Unit)? = null
-    var connectionStateCallback: ((Int) -> Unit)? = null
-    var servicesDiscovered: (() -> Unit)? = null
+    private var connectionErrorR: ((Throwable) -> Unit)? = null
+    private var connectionStateCallback: ((Int) -> Unit)? = null
+    private var servicesDiscovered: (() -> Unit)? = null
     var connectionStatus: Int? = null
     var gattServer: BluetoothGatt? = null
     var context: Context? = null
@@ -182,9 +182,9 @@ class BleUtilityNative {
                 else -> {
                     Handler(Looper.getMainLooper()).post {
                         connectionErrorR?.invoke(Throwable("Write Error $gatStatus"))
-                        if (gatStatus == 133) {
-                            tryAgain()
-                        }
+//                        if (gatStatus == 133) {
+//                            tryAgain()
+//                        }
                     }
 
                     //look for next call
@@ -227,9 +227,9 @@ class BleUtilityNative {
                 else -> {
                     Handler(Looper.getMainLooper()).post {
                         connectionErrorR?.invoke(Throwable("Write Error $gatStatus"))
-                        if (gatStatus == 133) {
-                            tryAgain()
-                        }
+//                        if (gatStatus == 133) {
+//                            tryAgain()
+//                        }
                     }
 
                     //look for next call
@@ -296,8 +296,8 @@ class BleUtilityNative {
     }
 
 
-    var retryCount = AtomicInteger(0)
-    var retryReadCount = AtomicInteger(0)
+    private var retryCount = AtomicInteger(0)
+    private var retryReadCount = AtomicInteger(0)
 
 
     fun triggerDisconnect() = run {
@@ -377,10 +377,10 @@ class BleUtilityNative {
 
     }
 
-    var tryAgainDisposable: Handler? = null
+    private var tryAgainDisposable: Handler? = null
 
     @SuppressLint("MissingPermission")
-    var runnable = Runnable {
+    private var runnable = Runnable {
         retryCount.incrementAndGet()
 //        Log.i("test", "reconnecting ... ")
         Handler(Looper.getMainLooper()).post {
@@ -466,7 +466,7 @@ class BleUtilityNative {
         }
     }
 
-    var bleCallsTrack: AtomicReference<MutableList<BleCalls>> = AtomicReference(arrayListOf())
+    private var bleCallsTrack: AtomicReference<MutableList<BleCalls>> = AtomicReference(arrayListOf())
 
     data class BleCalls(
         val inputBytes: ByteArray?,
