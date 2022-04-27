@@ -1,7 +1,8 @@
 package com.usman.androidble
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +12,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun inits() {
-        var utility = BleUtilityNative()
-//        utility.connectToDevice(this)
+        val utility = BleUtilityNative()
+        utility.connectToDevice(this,"wrtwetwywue" ,{
+
+        },{
+            utility.getCharacteristics().find { it.uuid == UUID.randomUUID() }?.let {
+                utility.writeCharacteristic("sdfdfdf".toByteArray(),
+                    it ,{},{},{})
+            }
+        },{
+
+        })
     }
 }

@@ -8,7 +8,7 @@ public class FlagsParser {
     private static final byte SIMULTANEOUS_LE_AND_BR_EDR_CAPABLE_HOST = 16;
     public static final byte UNKNOWN_FLAGS = -1;
 
-    public static void parse(com.color.control.util.DataUnion dataUnion, byte b) {
+    public static void parse(DataUnion dataUnion, byte b) {
         if (b == -1) {
 //            dataUnion.addData("Flags", "GeneralDiscoverable, [Device specific]");
             return;

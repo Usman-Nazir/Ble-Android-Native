@@ -1,11 +1,6 @@
 package com.usman.androidble.util
 
-import android.app.Activity
-import android.util.Log
-import com.color.control.util.showSnackbarShort
-import com.usman.androidble.R
 import java.util.Date
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**

@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.usman.androidble.util.hasProperty
 import java.util.*
@@ -22,7 +23,7 @@ class BleUtilityNative {
     private val allCharacteristics: MutableList<BluetoothGattCharacteristic> = arrayListOf()
     private var characteristicChanged: AtomicReference<MutableList<Pair<BluetoothGattCharacteristic, ((BluetoothGattCharacteristic?) -> Unit)>>> = AtomicReference(arrayListOf())
     var bleDevice: BluetoothDevice? = null
-    private var characteristicUuid: UUID = UUID.fromString("10fc308a-f1f9-493c-9643-6a9f016f5ecd")
+//    private var characteristicUuid: UUID = UUID.fromString("10fc308a-f1f9-493c-9643-6a9f016f5ecd")
 
 
     private var connectionErrorR: ((Throwable) -> Unit)? = null
@@ -302,23 +303,23 @@ class BleUtilityNative {
 
     fun triggerDisconnect() = run {
         if (connectionStatus == BluetoothProfile.STATE_CONNECTED) {
-            getCharacteristics().find { it.uuid == characteristicUuid }?.let { characteristic ->
-                writeCharacteristic("d:d".toByteArray(), characteristic, {
-                    Log.i("test", "exit called ${characteristic.uuid}")
-//                    releaseResources()
-                }, {
-                    Log.i("test", "exit called with error ${it}")
-                    try {
-//                        releaseResources()
-                    } catch (e: Exception) {
-                    }
-                }, {
-                    Log.i("test", "Write success now disconnecting ${it}")
-                    connectionStateCallback?.invoke(BluetoothProfile.STATE_DISCONNECTED)
-                    connectionStatus = BluetoothProfile.STATE_DISCONNECTED
-                    Handler(Looper.getMainLooper()).post { releaseResources() }
-                })
-            }
+//            getCharacteristics().find { it.uuid == characteristicUuid }?.let { characteristic ->
+//                writeCharacteristic("d:d".toByteArray(), characteristic, {
+//                    Log.i("test", "exit called ${characteristic.uuid}")
+////                    releaseResources()
+//                }, {
+//                    Log.i("test", "exit called with error ${it}")
+//                    try {
+////                        releaseResources()
+//                    } catch (e: Exception) {
+//                    }
+//                }, {
+//                    Log.i("test", "Write success now disconnecting ${it}")
+//                    connectionStateCallback?.invoke(BluetoothProfile.STATE_DISCONNECTED)
+//                    connectionStatus = BluetoothProfile.STATE_DISCONNECTED
+//                    Handler(Looper.getMainLooper()).post { releaseResources() }
+//                })
+//            }
         }
     }
 
@@ -345,20 +346,42 @@ class BleUtilityNative {
         servicesDiscovered = null
     }
 
+    var blueToothManager:BluetoothManager?=null
+    var bluetoothAdapter: BluetoothAdapter? =null
 
     fun connectToDevice(
         context: Context,
-        it: BluetoothDevice?,
+        macAddress: String?,
         connectionError: (Throwable) -> Unit,
         servicesDiscovered: () -> Unit,
         connectionStateCallback: (Int) -> Unit
     ) {
+
+        blueToothManager = (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)
+        if (blueToothManager ==null){
+            Toast.makeText(context , "Feature not supported" ,Toast.LENGTH_SHORT).show()
+            return
+        }
+        bluetoothAdapter = blueToothManager?.adapter
+        if (bluetoothAdapter?.isEnabled ==false){
+            Toast.makeText(context , "Please check Bluetooth settings" ,Toast.LENGTH_SHORT).show()
+            return
+        }
+        var device = try {
+            bluetoothAdapter?.getRemoteDevice(macAddress)
+        } catch (e: Exception) {
+            Toast.makeText(context , "Invalid Device" ,Toast.LENGTH_SHORT).show()
+            return
+        }
+
+
+
         retryCount.set(0)
         bleCallsTrack.get()?.clear()
         characteristicChanged.get().clear()
         allCharacteristics.clear()
         bleDevice = null
-        bleDevice = it
+        bleDevice = device
 
         connectionErrorR = connectionError
         this.connectionStateCallback = connectionStateCallback
@@ -531,7 +554,7 @@ class BleUtilityNative {
         }
     }
 
-    fun getCharacteristics(): MutableList<BluetoothGattCharacteristic> {
+    fun getCharacteristics(): List<BluetoothGattCharacteristic> {
         return allCharacteristics
     }
 

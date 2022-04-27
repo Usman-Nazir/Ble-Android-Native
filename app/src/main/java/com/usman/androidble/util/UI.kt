@@ -1,4 +1,4 @@
-package com.color.control.util
+package com.usman.androidble.util
 
 import android.app.Activity
 import androidx.annotation.StringRes
