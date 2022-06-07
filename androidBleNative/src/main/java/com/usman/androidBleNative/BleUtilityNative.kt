@@ -1,4 +1,4 @@
-package com.usman.androidble
+package com.usman.androidBleNative
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -13,8 +13,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.usman.androidble.util.hasProperty
-import java.util.*
+import com.usman.androidBleNative.util.hasProperty
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
@@ -438,7 +437,7 @@ class BleUtilityNative {
 
         if (connectionStatus == BluetoothProfile.STATE_CONNECTED) {
             if (characteristicUuid.hasProperty(BluetoothGattCharacteristic.PROPERTY_NOTIFY)) {
-                bleCallsTrack.get().add(BleCalls(null, characteristicUuid, null, callBackFailure, BluetoothGattCharacteristic.PROPERTY_NOTIFY, notifyCallBack =NotifyCallBack( enabled,notificationRegisteredSuccess,notificationChangeCallback)))
+                bleCallsTrack.get().add(BleCalls(null, characteristicUuid, null, callBackFailure, BluetoothGattCharacteristic.PROPERTY_NOTIFY, notifyCallBack = NotifyCallBack( enabled,notificationRegisteredSuccess,notificationChangeCallback)))
                 val isFound = bleCallsTrack.get().find { it.propertyType == BluetoothGattCharacteristic.PROPERTY_NOTIFY && it.isRequestSent }
                 if (isFound == null) {
                     bleCallsTrack.get().find { it.propertyType == BluetoothGattCharacteristic.PROPERTY_WRITE && !it.isRequestSent }?.let {

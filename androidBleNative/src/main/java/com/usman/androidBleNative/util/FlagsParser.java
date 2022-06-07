@@ -1,4 +1,4 @@
-package com.usman.androidble.util;
+package com.usman.androidBleNative.util;
 
 public class FlagsParser {
     private static final byte BR_EDR_NOT_SUPPORTED = 4;

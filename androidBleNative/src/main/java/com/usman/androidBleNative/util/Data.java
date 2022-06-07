@@ -1,4 +1,4 @@
-package com.usman.androidble.util;
+package com.usman.androidBleNative.util;
 
 public class Data {
     public static final int FORMAT_FLOAT = 52;

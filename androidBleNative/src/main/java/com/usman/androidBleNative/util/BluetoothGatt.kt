@@ -1,4 +1,4 @@
-package com.usman.androidble.util
+package com.usman.androidBleNative.util
 
 import android.bluetooth.BluetoothGattCharacteristic
 

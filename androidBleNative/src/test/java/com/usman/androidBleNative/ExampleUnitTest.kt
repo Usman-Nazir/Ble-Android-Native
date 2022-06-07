@@ -1,4 +1,4 @@
-package com.usman.androidble
+package com.usman.androidBleNative
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.usman.androidble.util
+package com.usman.androidBleNative.util
 
 fun ByteArray.toHex() = joinToString("") { String.format("%02X", (it.toInt() and 0xff)) }
 
